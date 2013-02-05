@@ -291,8 +291,6 @@ AP_Mount camera_mount(g_gps, &dcm);
 static bool usb_connected;
 #endif
 
-static const char *comma = ",";
-
 /* Radio values
 		Channel assignments
 			1   Steering
@@ -538,7 +536,7 @@ static int32_t 	perf_mon_timer;
 // The maximum main loop execution time recorded in the current performance monitoring interval
 static int16_t 	G_Dt_max = 0;
 // The number of gps fixes recorded in the current performance monitoring interval
-static int16_t 	gps_fix_count = 0;
+static uint8_t 	gps_fix_count = 0;
 // A variable used by developers to track performanc metrics.
 // Currently used to record the number of GCS heartbeat messages received
 static int16_t pmTest1 = 0;
@@ -707,8 +705,8 @@ static void fast_loop()
 		if (g.log_bitmask & MASK_LOG_ATTITUDE_FAST)
 			Log_Write_Attitude((int)ahrs.roll_sensor, (int)ahrs.pitch_sensor, (uint16_t)ahrs.yaw_sensor);
 
-		if (g.log_bitmask & MASK_LOG_RAW)
-			Log_Write_Raw();
+		if (g.log_bitmask & MASK_LOG_IMU)
+			Log_Write_IMU();
 	#endif
 #endif
 	// inertial navigation
@@ -812,7 +810,7 @@ cliSerial->println(tempaccel.z, DEC);
 				Log_Write_Nav_Tuning();
 
 			if (g.log_bitmask & MASK_LOG_GPS)
-				Log_Write_GPS(g_gps->time, current_loc.lat, current_loc.lng, g_gps->altitude, current_loc.alt, (long) g_gps->ground_speed, g_gps->ground_course, g_gps->fix, g_gps->num_sats);
+				Log_Write_GPS(g_gps->time, current_loc.lat, current_loc.lng, g_gps->altitude, current_loc.alt, g_gps->ground_speed, g_gps->ground_course, g_gps->fix, g_gps->num_sats);
 #endif
 			break;
 
@@ -894,7 +892,7 @@ static void slow_loop()
 static void one_second_loop()
 {
 #if LITE == DISABLED
-	if (g.log_bitmask & MASK_LOG_CUR)
+	if (g.log_bitmask & MASK_LOG_CURRENT)
 		Log_Write_Current();
 #endif
 	// send a heartbeat

@@ -171,7 +171,7 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Param: BATT_CURR_PIN
     // @DisplayName: Battery Current sensing pin
     // @Description: Setting this to 0 ~ 13 will enable battery current sensing on pins A0 ~ A13.
-    // @Values: -1:Disabled, 1:A1, 2:A2, 13:A13
+    // @Values: -1:Disabled, 1:A1, 2:A2, 12:A12
     // @User: Standard
     GSCALAR(battery_curr_pin,    "BATT_CURR_PIN",    BATTERY_CURR_PIN),
 
@@ -333,6 +333,14 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Units: PWM
     // @User: Standard
     GSCALAR(throttle_cruise,        "TRIM_THROTTLE",    THROTTLE_CRUISE),
+
+    // @Param: THR_MID
+    // @DisplayName: Throttle Mid Position
+    // @Description: The throttle output (0 ~ 1000) when throttle stick is in mid position.  Used to scale the manual throttle so that the mid throttle stick position is close to the throttle required to hover
+    // @User: Standard
+    // @Range: 300 700
+    // @Increment: 1
+    GSCALAR(throttle_mid,        "THR_MID",    THR_MID),
 
     // @Param: FLTMODE1
     // @DisplayName: Flight Mode 1

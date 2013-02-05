@@ -229,6 +229,7 @@ static void do_RTL(void)
     control_mode    = RTL;
     crash_timer     = 0;
     next_WP                 = home;
+    loiter_direction = 1;
 
     // Altitude to hold over home
     // Set by configuration tool
@@ -261,15 +262,26 @@ static void do_land()
     set_next_WP(&next_nav_command);
 }
 
+static void loiter_set_direction_wp(struct Location *nav_command) 
+{
+    if (nav_command->options & MASK_OPTIONS_LOITER_DIRECTION) {
+        loiter_direction = -1;
+    } else {
+        loiter_direction=1;
+    }
+}
+
 static void do_loiter_unlimited()
 {
     set_next_WP(&next_nav_command);
+    loiter_set_direction_wp(&next_nav_command);
 }
 
 static void do_loiter_turns()
 {
     set_next_WP(&next_nav_command);
     loiter_total = next_nav_command.p1 * 360;
+    loiter_set_direction_wp(&next_nav_command);
 }
 
 static void do_loiter_time()
@@ -277,6 +289,7 @@ static void do_loiter_time()
     set_next_WP(&next_nav_command);
     loiter_time_ms = millis();
     loiter_time_max_ms = next_nav_command.p1 * (uint32_t)1000;     // units are seconds
+    loiter_set_direction_wp(&next_nav_command);
 }
 
 /********************************************************************************/
@@ -318,7 +331,7 @@ static bool verify_land()
 
     // Set land_complete if we are within 2 seconds distance or within
     // 3 meters altitude of the landing point
-    if (((wp_distance > 0) && (wp_distance <= (g.land_flare_sec*g_gps->ground_speed*0.01)))
+    if ((wp_distance <= (g.land_flare_sec*g_gps->ground_speed*0.01))
         || (adjusted_altitude_cm() <= next_WP.alt + g.land_flare_alt*100)) {
 
         land_complete = true;
@@ -359,7 +372,7 @@ static bool verify_nav_wp()
 {
     hold_course = -1;
     update_crosstrack();
-    if ((wp_distance > 0) && (wp_distance <= g.waypoint_radius)) {
+    if (wp_distance <= (uint32_t)max(g.waypoint_radius,0)) {
         gcs_send_text_fmt(PSTR("Reached Waypoint #%i dist %um"),
                           (unsigned)nav_command_index,
                           (unsigned)get_distance(&current_loc, &next_WP));
@@ -416,7 +429,7 @@ static bool verify_loiter_turns()
 
 static bool verify_RTL()
 {
-    if (wp_distance <= g.waypoint_radius) {
+    if (wp_distance <= (uint32_t)max(g.waypoint_radius,0)) {
         gcs_send_text_P(SEVERITY_LOW,PSTR("Reached home"));
         return true;
     }else{
@@ -477,7 +490,7 @@ static bool verify_change_alt()
 
 static bool verify_within_distance()
 {
-    if (wp_distance < condition_value) {
+    if (wp_distance < max(condition_value,0)) {
         condition_value = 0;
         return true;
     }
@@ -490,6 +503,7 @@ static bool verify_within_distance()
 
 static void do_loiter_at_location()
 {
+    loiter_direction = 1;
     next_WP = current_loc;
 }
 

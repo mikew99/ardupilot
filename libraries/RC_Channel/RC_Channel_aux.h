@@ -11,7 +11,7 @@
 
 /// @class	RC_Channel_aux
 /// @brief	Object managing one aux. RC channel (CH5-8), with information about its function
-class RC_Channel_aux : public        RC_Channel {
+class RC_Channel_aux : public RC_Channel {
 public:
     /// Constructor
     ///
@@ -38,16 +38,16 @@ public:
         k_mount_open            = 9,            ///< mount open (deploy) / close (retract)
         k_cam_trigger           = 10,           ///< camera trigger
         k_egg_drop              = 11,           ///< egg drop
-        k_mount2_pan            = 12,           ///< mount2 yaw (pan)
-        k_mount2_tilt           = 13,           ///< mount2 pitch (tilt)
-        k_mount2_roll           = 14,           ///< mount2 roll
-        k_mount2_open           = 15,           ///< mount2 open (deploy) / close (retract)
-        k_dspoiler1             = 16,           ///< differential spoiler 1 (left wing)
-        k_dspoiler2             = 17,           ///< differential spoiler 2 (right wing)
-        k_aileron_with_input    = 18,           ///< aileron, with rc input
-        k_elevator              = 19,           ///< elevator
-        k_elevator_with_input   = 20,           ///< elevator, with rc input
-        k_nr_aux_servo_functions                ///< This must be the last enum value (only add new values _before_ this one)
+        k_mount2_pan    = 12,           ///< mount2 yaw (pan)
+        k_mount2_tilt   = 13,           ///< mount2 pitch (tilt)
+        k_mount2_roll   = 14,           ///< mount2 roll
+        k_mount2_open   = 15,           ///< mount2 open (deploy) / close (retract)
+		k_dspoiler1     = 16,           ///< differential spoiler 1 (left wing)
+		k_dspoiler2     = 17,           ///< differential spoiler 2 (right wing)
+        k_aileron_with_input    = 18,            ///< aileron, with rc input
+        k_elevator              = 19,            ///< elevator
+        k_elevator_with_input   = 20,            ///< elevator, with rc input
+        k_nr_aux_servo_functions         ///< This must be the last enum value (only add new values _before_ this one)
     } Aux_servo_function_t;
 
     AP_Int8         function;                   ///< see Aux_servo_function_t enum

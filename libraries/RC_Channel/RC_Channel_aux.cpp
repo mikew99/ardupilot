@@ -12,7 +12,7 @@ const AP_Param::GroupInfo RC_Channel_aux::var_info[] PROGMEM = {
     // @Param: FUNCTION
     // @DisplayName: Servo out function
     // @Description: Setting this to Disabled(0) will disable this output, any other value will enable the corresponding function
-    // @Values: 0:Disabled,1:Manual,2:Flap,3:Flap_auto,4:Aileron,5:flaperon,6:mount_pan,7:mount_tilt,8:mount_roll,9:mount_open,10:camera_trigger,11:release,12:mount2_pan,13:mount2_tilt,14:mount2_roll,15:mount2_open,16:DifferentialSpoiler1,17:DifferentialSpoiler2,18:AileronWithInput
+    // @Values: 0:Disabled,1:Manual,2:Flap,3:Flap_auto,4:Aileron,5:flaperon,6:mount_pan,7:mount_tilt,8:mount_roll,9:mount_open,10:camera_trigger,11:release,12:mount2_pan,13:mount2_tilt,14:mount2_roll,15:mount2_open,16:DifferentialSpoiler1,17:DifferentialSpoiler2,18:AileronWithInput,19:Elevator,20:ElevatorWithInput
     // @User: Standard
     AP_GROUPINFO("FUNCTION",       1, RC_Channel_aux, function, 0),
 
@@ -63,6 +63,7 @@ void update_aux_servo_function( RC_Channel_aux* rc_a,
     // set auxiliary ranges
     for (uint8_t i = 0; i < 7; i++) {
         if (_aux_channels[i] == NULL) continue;
+<<<<<<< HEAD
         RC_Channel_aux::Aux_servo_function_t function = (RC_Channel_aux::Aux_servo_function_t)_aux_channels[i]->function.get();
         switch (function) {
         case RC_Channel_aux::k_flap:
@@ -89,6 +90,34 @@ void update_aux_servo_function( RC_Channel_aux* rc_a,
             break;
         }
     }
+=======
+		RC_Channel_aux::Aux_servo_function_t function = (RC_Channel_aux::Aux_servo_function_t)_aux_channels[i]->function.get();
+		switch (function) {
+		case RC_Channel_aux::k_flap:
+		case RC_Channel_aux::k_flap_auto:
+		case RC_Channel_aux::k_flaperon:
+		case RC_Channel_aux::k_egg_drop:
+			_aux_channels[i]->set_range(0,100);
+			break;
+		case RC_Channel_aux::k_aileron:
+		case RC_Channel_aux::k_aileron_with_input:
+			_aux_channels[i]->set_angle(4500);
+			break;
+		case RC_Channel_aux::k_elevator:
+		case RC_Channel_aux::k_elevator_with_input:
+			_aux_channels[i]->set_angle(4500);
+			break;
+		case RC_Channel_aux::k_dspoiler1:
+		    _aux_channels[i]->set_angle(4500);
+			break;
+		case RC_Channel_aux::k_dspoiler2:
+		    _aux_channels[i]->set_angle(4500);
+			break;
+		default:
+			break;
+		}
+	}
+>>>>>>> upstream/master
 }
 
 /// Should be called after the the servo functions have been initialized
@@ -130,9 +159,17 @@ RC_Channel_aux::set_radio_trim(RC_Channel_aux::Aux_servo_function_t function)
 {
     for (uint8_t i = 0; i < 7; i++) {
         if (_aux_channels[i] && _aux_channels[i]->function.get() == function) {
+<<<<<<< HEAD
             _aux_channels[i]->radio_trim = _aux_channels[i]->radio_in;
             _aux_channels[i]->radio_trim.save();
         }
+=======
+			if (_aux_channels[i]->radio_in != 0) {
+				_aux_channels[i]->radio_trim = _aux_channels[i]->radio_in;
+				_aux_channels[i]->radio_trim.save();
+			}
+		}
+>>>>>>> upstream/master
     }
 }
 

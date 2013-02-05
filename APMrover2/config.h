@@ -128,6 +128,7 @@
 # define BATTERY_PIN_1	  -1
 # define CURRENT_PIN_1	  -1
 # define MAG_ORIENTATION   ROTATION_NONE
+# define SERIAL0_BAUD 57600
 #endif
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
@@ -654,14 +655,14 @@
 #ifndef LOG_MODE
 # define LOG_MODE				ENABLED
 #endif
-#ifndef LOG_RAW
-# define LOG_RAW				DISABLED
+#ifndef LOG_IMU
+# define LOG_IMU				DISABLED
 #endif
 #ifndef LOG_CMD
 # define LOG_CMD				ENABLED
 #endif
-#ifndef LOG_CUR
-# define LOG_CUR			DISABLED
+#ifndef LOG_CURRENT
+# define LOG_CURRENT			DISABLED
 #endif
 
 // calculate the default log_bitmask
@@ -675,9 +676,9 @@
 		LOGBIT(CTUN)			| \
 		LOGBIT(NTUN)			| \
 		LOGBIT(MODE)			| \
-		LOGBIT(RAW)				| \
+		LOGBIT(IMU)				| \
 		LOGBIT(CMD)				| \
-		LOGBIT(CUR)
+		LOGBIT(CURRENT)
 
 
 //////////////////////////////////////////////////////////////////////////////
