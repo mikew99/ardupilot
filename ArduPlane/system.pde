@@ -261,6 +261,14 @@ static void init_ardupilot()
 
     set_mode(MANUAL);
 
+    // initialize the throttle curve
+    throttle_curve.clear();
+    throttle_curve.add_point( 0, g.throttle_curve_min.get() );   // Set min throttle curve point
+    throttle_curve.add_point( 25, g.throttle_curve_low.get() ); // Set one-quarter throttle curve
+    throttle_curve.add_point( 50, g.throttle_curve_mid.get() ); // Set throttle curve midpoint
+    throttle_curve.add_point( 75, g.throttle_curve_high.get() ); // Set three-quarters throttle curve
+    throttle_curve.add_point( 100, g.throttle_curve_max.get() ); // Set max throttle curve point
+
     // set the correct flight mode
     // ---------------------------
     reset_control_switch();

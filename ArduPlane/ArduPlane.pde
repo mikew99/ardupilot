@@ -42,6 +42,7 @@
 #include <AP_Relay.h>       // APM relay
 #include <AP_Camera.h>          // Photo or video camera
 #include <AP_Airspeed.h>
+#include <AP_Curve.h>
 #include <memcheck.h>
 
 #include <APM_OBC.h>
@@ -462,6 +463,9 @@ static int16_t takeoff_pitch_cd;
 
 // this controls throttle suppression in auto modes
 static bool throttle_suppressed;
+
+// allow for a non-linear throttle curve (mostly for gas engines)
+AP_CurveUInt16_Size5 throttle_curve;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Loiter management

@@ -279,6 +279,51 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @User: Standard
     GSCALAR(throttle_max,           "THR_MAX",        THROTTLE_MAX),
 
+    // @Param: THR_CURVE_MIN
+    // @DisplayName: Throttle Curve Minimum Point Value
+    // @Description: The value at the lowest point (0%) of the throttle curve.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(throttle_curve_min,           "THR_CURVE_MIN",        THROTTLE_CURVE_MIN),
+
+    // @Param: THR_CURVE_LOW
+    // @DisplayName: Throttle Curve Quarter Point Value
+    // @Description: The value at the quarter point (25%) of the throttle curve.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(throttle_curve_low,           "THR_CURVE_LOW",        THROTTLE_CURVE_LOW),
+
+    // @Param: THR_CURVE_MID
+    // @DisplayName: Throttle Curve Midpoint Value
+    // @Description: The value at the midpoint (50%) of the throttle curve.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(throttle_curve_mid,           "THR_CURVE_MID",        THROTTLE_CURVE_MID),
+
+    // @Param: THR_CURVE_HIGH
+    // @DisplayName: Throttle Curve Three-Quarter Point Value
+    // @Description: The value at the three-quarter point (75%) of the throttle curve.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(throttle_curve_high,           "THR_CURVE_HIGH",        THROTTLE_CURVE_HIGH),
+
+    // @Param: THR_CURVE_MAX
+    // @DisplayName: Throttle Curve Maximum Point Value
+    // @Description: The value at the highest point (100%) of the throttle curve.
+    // @Units: Percent
+    // @Range: 0 100
+    // @Increment: 1
+    // @User: Standard
+    GSCALAR(throttle_curve_max,           "THR_CURVE_MAX",        THROTTLE_CURVE_MAX),
+
     // @Param: THR_SLEWRATE
     // @DisplayName: Throttle slew rate
     // @Description: maximum percentage change in throttle per second. A setting of 10 means to not change the throttle by more than 10% of the full throttle range in one second

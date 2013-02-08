@@ -548,6 +548,25 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
+// Throttle curve
+//
+#ifndef THROTTLE_CURVE_MIN
+ # define THROTTLE_CURVE_MIN                   0 // percent
+#endif
+#ifndef THROTTLE_CURVE_LOW
+ # define THROTTLE_CURVE_LOW                	25
+#endif
+#ifndef THROTTLE_CURVE_MID
+ # define THROTTLE_CURVE_MID	               	50
+#endif
+#ifndef THROTTLE_CURVE_HIGH
+ # define THROTTLE_CURVE_HIGH                	75
+#endif
+#ifndef THROTTLE_CURVE_MAX
+ # define THROTTLE_CURVE_MAX                   100
+#endif
+
+//////////////////////////////////////////////////////////////////////////////
 // Autopilot control limits
 //
 #ifndef HEAD_MAX

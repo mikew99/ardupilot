@@ -173,6 +173,12 @@ public:
         k_param_throttle_suppress_manual,
         k_param_throttle_passthru_stabilize,
 
+        k_param_throttle_curve_min,
+        k_param_throttle_curve_low,
+        k_param_throttle_curve_mid,
+        k_param_throttle_curve_high,
+        k_param_throttle_curve_max,
+
         //
         // 200: Feed-forward gains
         //
@@ -294,6 +300,12 @@ public:
     AP_Int16 throttle_fs_value;
     AP_Int8 throttle_cruise;
     AP_Int8 throttle_nudge;
+
+    AP_Int8 throttle_curve_min;
+    AP_Int8 throttle_curve_low;
+    AP_Int8 throttle_curve_mid;
+    AP_Int8 throttle_curve_high;
+    AP_Int8 throttle_curve_max;
 
     // Failsafe
     AP_Int8 short_fs_action;

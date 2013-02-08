@@ -248,6 +248,7 @@ static void calc_throttle()
         }
 
         g.channel_throttle.servo_out = constrain_int16(g.channel_throttle.servo_out, g.throttle_min.get(), g.throttle_max.get());
+
     } else {
         // throttle control with airspeed compensation
         // -------------------------------------------
@@ -368,6 +369,7 @@ static void throttle_slew_limit(int16_t last_throttle)
             temp = 1;
         }
         g.channel_throttle.radio_out = constrain_int16(g.channel_throttle.radio_out, last_throttle - temp, last_throttle + temp);
+
     }
 }
 
@@ -536,6 +538,9 @@ static void set_servos(void)
         g.channel_throttle.servo_out = constrain_int16(g.channel_throttle.servo_out, 
                                                        g.throttle_min.get(), 
                                                        g.throttle_max.get());
+
+        // map to the throttle curve
+        g.channel_throttle.servo_out = throttle_curve.get_y(g.channel_throttle.servo_out);
 
         if (suppress_throttle()) {
             // throttle is suppressed in auto mode
