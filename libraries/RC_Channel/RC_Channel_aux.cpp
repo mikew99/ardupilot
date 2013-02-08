@@ -63,34 +63,6 @@ void update_aux_servo_function( RC_Channel_aux* rc_a,
     // set auxiliary ranges
     for (uint8_t i = 0; i < 7; i++) {
         if (_aux_channels[i] == NULL) continue;
-<<<<<<< HEAD
-        RC_Channel_aux::Aux_servo_function_t function = (RC_Channel_aux::Aux_servo_function_t)_aux_channels[i]->function.get();
-        switch (function) {
-        case RC_Channel_aux::k_flap:
-        case RC_Channel_aux::k_flap_auto:
-        case RC_Channel_aux::k_flaperon:
-        case RC_Channel_aux::k_egg_drop:
-            _aux_channels[i]->set_range(0,100);
-            break;
-        case RC_Channel_aux::k_aileron:
-        case RC_Channel_aux::k_aileron_with_input:
-            _aux_channels[i]->set_angle(4500);
-            break;
-        case RC_Channel_aux::k_elevator:
-        case RC_Channel_aux::k_elevator_with_input:
-            _aux_channels[i]->set_angle(4500);
-            break;
-        case RC_Channel_aux::k_dspoiler1:
-            _aux_channels[i]->set_angle(4500);
-            break;
-        case RC_Channel_aux::k_dspoiler2:
-            _aux_channels[i]->set_angle(4500);
-            break;
-        default:
-            break;
-        }
-    }
-=======
 		RC_Channel_aux::Aux_servo_function_t function = (RC_Channel_aux::Aux_servo_function_t)_aux_channels[i]->function.get();
 		switch (function) {
 		case RC_Channel_aux::k_flap:
@@ -117,7 +89,6 @@ void update_aux_servo_function( RC_Channel_aux* rc_a,
 			break;
 		}
 	}
->>>>>>> upstream/master
 }
 
 /// Should be called after the the servo functions have been initialized
@@ -159,17 +130,11 @@ RC_Channel_aux::set_radio_trim(RC_Channel_aux::Aux_servo_function_t function)
 {
     for (uint8_t i = 0; i < 7; i++) {
         if (_aux_channels[i] && _aux_channels[i]->function.get() == function) {
-<<<<<<< HEAD
-            _aux_channels[i]->radio_trim = _aux_channels[i]->radio_in;
-            _aux_channels[i]->radio_trim.save();
-        }
-=======
 			if (_aux_channels[i]->radio_in != 0) {
 				_aux_channels[i]->radio_trim = _aux_channels[i]->radio_in;
 				_aux_channels[i]->radio_trim.save();
 			}
 		}
->>>>>>> upstream/master
     }
 }
 
