@@ -1062,31 +1062,32 @@ static void update_current_flight_mode(void)
             break;
 
         case MAV_CMD_NAV_LAND:
-            if (g.rudder_steer == 0 || !land_complete) {
+            // have we hit the flare point?
+            if(!land_complete) {
+                // if we're still above the flare point keep calculating roll
                 calc_nav_roll();
-            } else {
-                nav_roll_cd = 0;
-            }
-
-            if (land_complete) {
-                // hold pitch constant in final approach
-                nav_pitch_cd = g.land_pitch_cd;
-            } else {
+                // if we're still above the flare point keep calculating pitch
                 calc_nav_pitch();
                 if (!alt_control_airspeed()) {
                     // when not under airspeed control, don't allow
                     // down pitch in landing
                     nav_pitch_cd = constrain_int32(nav_pitch_cd, 0, nav_pitch_cd);
                 }
+                // calculate throttle
+                calc_throttle();
+            } else { // we've reached the flare point
+                if(g.rudder_steer == TRUE) { // use rudder only on final flare?
+                    // hold wings level in final approach
+                    nav_roll_cd = 0;
+                } else {
+                    // keep calculating roll
+                    calc_nav_roll();
+                }
+                // hold pitch constant in final approach
+                nav_pitch_cd = g.land_pitch_cd;
+                // force minimum throttle
+                g.channel_throttle.servo_out = g.throttle_min;
             }
-            calc_throttle();
-
-            if (land_complete) {
-                // we are in the final stage of a landing - force
-                // zero throttle
-                g.channel_throttle.servo_out = 0;
-            }
-            break;
 
         default:
             // we are doing normal AUTO flight, the special cases
