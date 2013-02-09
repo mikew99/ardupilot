@@ -78,6 +78,10 @@ public:
         k_param_throttle_nudge,
         k_param_alt_offset,
         k_param_ins,                // libraries/AP_InertialSensor variables
+        k_param_ground_use_bearing,
+        k_param_ground_bearing_cd,
+        k_param_land_enable_abort,
+        k_param_land_abort_bearing_thresh,
 
         // 110: Telemetry control
         //
@@ -331,6 +335,10 @@ public:
     AP_Int8 manual_level;
     AP_Int32 airspeed_cruise_cm;
     AP_Int32 RTL_altitude_cm;
+    AP_Int8 ground_use_bearing;
+    AP_Int16 ground_bearing_cd;
+    AP_Int8 land_enable_abort;
+    AP_Int8 land_abort_bearing_thresh;
     AP_Int16 land_pitch_cd;
     AP_Float land_flare_alt;
     AP_Float land_flare_sec;

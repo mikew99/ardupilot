@@ -93,7 +93,35 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Description: When enabled, only rudder will be used for steering during takeoff and landing, with the ailerons used to hold the plane level
     // @Values: 0:Disabled,1:Enabled
     // @User: User
-    GSCALAR(rudder_steer,           "RUDDER_STEER",   0),
+    GSCALAR(rudder_steer,           "RUDDER_STEER",   FALSE),
+
+    // @Param: ground_use_bearing
+    // @DisplayName: Use Ground Bearing
+    // @Description: Enable a bearing direction in auto-land or auto-takoff
+    // @Units: 0: Disabled, 1:Enabled
+    // @User: Advanced
+    GSCALAR(ground_use_bearing,          "GRND_USE_BEARING",  FALSE),
+
+    // @Param: ground_bearing_cd
+    // @DisplayName: Ground Bearing Direction
+    // @Description: Used in autoland or auto-takeoff for planes to indicate a landing direction
+    // @Units: centi-Degrees
+    // @User: Advanced
+    GSCALAR(ground_bearing_cd,          "GRND_YAW_CD",  0),
+
+    // @Param: land_enable_abort
+    // @DisplayName: Enable Land Abort
+    // @Description: Enable the ability to abort a landing if certain conditions are met
+    // @Units: 0: Disabled, 1:Enabled
+    // @User: Advanced
+    GSCALAR(land_enable_abort,          "LAND_ENBL_ABRT",  FALSE),
+
+    // @Param: land_abort_bearing_thresh
+    // @DisplayName: Landing abort bearing thresh
+    // @Description: Abort a landing if current bearing difference exceeds value
+    // @Units: centi-degrees (0-180 degrees)
+    // @User: Advanced
+    GSCALAR(land_abort_bearing_thresh,          "LAND_YAW_THRSH",  100),
 
     // @Param: land_pitch_cd
     // @DisplayName: Landing Pitch
