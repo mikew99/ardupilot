@@ -139,6 +139,10 @@ static void handle_process_do_command()
     case MAV_CMD_DO_MOUNT_CONTROL:                      // Mission command to control a camera mount |pitch(deg*100) or lat, depending on mount mode.| roll(deg*100) or lon depending on mount mode| yaw(deg*100) or alt (in cm) depending on mount mode| Empty| Empty| Empty| Empty|
         camera_mount.control_cmd();
         break;
+
+    case MAV_CMD_DO_SET_GROUND_OPTIONS:
+        do_set_ground_options();
+        break;
 #endif
     }
 }
@@ -260,6 +264,14 @@ static void do_nav_wp()
 static void do_land()
 {
     set_next_WP(&next_nav_command);
+
+    // reload any airspeed or ground speed parameters that may have
+    // been set for landing
+    g.airspeed_cruise_cm.load();
+    g.min_gndspeed_cm.load();
+    g.throttle_cruise.load();
+    // reload any roll limit applied
+    g.roll_limit_cd.load();
 }
 
 static void loiter_set_direction_wp(struct Location *nav_command) 
@@ -299,8 +311,13 @@ static bool verify_takeoff()
 {
     if (ahrs.yaw_initialised()) {
         if (hold_course == -1) {
-            // save our current course to take off
-            hold_course = ahrs.yaw_sensor;
+            if (g.ground_use_bearing) {
+                // use a predefined direction for takeoff
+                hold_course = g.ground_use_bearing;
+            } else {
+                // save our current course to take off
+                hold_course = ahrs.yaw_sensor;
+            }
             gcs_send_text_fmt(PSTR("Holding course %ld"), hold_course);
         }
     }
@@ -325,36 +342,44 @@ static bool verify_takeoff()
 // we are executing a landing
 static bool verify_land()
 {
-    // we don't 'verify' landing in the sense that it never completes,
+    // In the normal case we don't 'verify' landing in the sense that it never completes,
     // so we don't verify command completion. Instead we use this to
-    // adjust final landing parameters
+    // adjust final landing parameters. If abort conditions are met, landing will be
+    // 'verified', but with the assumption we will retry a take-off
 
-    // Set land_complete if we are within 2 seconds distance or within
-    // 3 meters altitude of the landing point
+    // Set land_complete if we are within land_flare_sec seconds distance or within
+    // land_flare_alt meters altitude of the landing point
     if ((wp_distance <= (g.land_flare_sec*g_gps->ground_speed*0.01))
         || (adjusted_altitude_cm() <= next_WP.alt + g.land_flare_alt*100)) {
 
         land_complete = true;
 
         if (hold_course == -1) {
-            // we have just reached the threshold of to flare for landing.
-            // We now don't want to do any radical
-            // turns, as rolling could put the wings into the runway.
-            // To prevent further turns we set hold_course to the
-            // current heading. Previously we set this to
-            // crosstrack_bearing, but the xtrack bearing can easily
-            // be quite large at this point, and that could induce a
-            // sudden large roll correction which is very nasty at
-            // this point in the landing.
-            hold_course = ahrs.yaw_sensor;
+            // We have just reached the threshold to flare for landing.
+            // We now don't want to do any radical turns, as rolling
+            // could put the wings into the run-way.
+
+            // If we have a desired run-way heading, double check that
+            // we are within land_abort_bearing_thresh degrees of the desired heading.
+            // If land_enable_abort is true, break out and re-attempt take-off
+            // if we are outside the range, otherwise lock on to current heading.
+
+            // special abort condition!
+            if (g.land_enable_abort && g.ground_use_bearing && abs(g.ground_bearing_cd - ahrs.yaw_sensor) > g.land_abort_bearing_thresh) {
+                // hold current heading
+                hold_course = g.ground_bearing_cd; //ahrs.yaw_sensor;
+                // this is the only time landing is considered to 'complete'. It is expected
+                // that a takeoff is the next command
+                return true;
+            } else if (g.ground_use_bearing && abs(g.ground_bearing_cd - ahrs.yaw_sensor) <= g.land_abort_bearing_thresh) {
+                // if we are within land_abort_bearing_thresh centi-degrees of our desired heading, try to meet the correct landing bearing value
+                hold_course = g.ground_bearing_cd;
+            } else {
+                // otherwise, just hold current course
+                hold_course = ahrs.yaw_sensor;
+            }
             gcs_send_text_fmt(PSTR("Land Complete - Hold course %ld"), hold_course);
         }
-
-        // reload any airspeed or groundspeed parameters that may have
-        // been set for landing
-        g.airspeed_cruise_cm.load();
-        g.min_gndspeed_cm.load();
-        g.throttle_cruise.load();
     }
 
     if (hold_course != -1) {
@@ -636,4 +661,20 @@ static void do_repeat_relay()
     event_state.delay_ms        = next_nonnav_command.lat * 500.0;
     event_state.repeat          = next_nonnav_command.alt * 2;
     update_events();
+}
+
+static void do_set_ground_options()
+{
+    // enable landing abort
+    if(next_nonnav_command.p1 == 1) {
+        g.land_enable_abort = TRUE;
+    } else {
+        g.land_enable_abort = FALSE;
+    }
+
+    // set the desired ground bearing
+    g.ground_bearing_cd = wrap_360_cd(next_nonnav_command.alt * 100);
+
+    // set the abort bearing threshold
+    g.land_abort_bearing_thresh = wrap_180_cd(next_nonnav_command.lat * 100);
 }

@@ -66,6 +66,17 @@
 	      <param index="6">Empty</param>
 	      <param index="7">Empty</param>
 	    </entry>
+	    
+	    <entry name="MAV_CMD_DO_SET_GROUND_OPTIONS" value="206">
+	      <description>Set up landing options including enable abort, ground bearing and abort bearing threshold</description>
+	      <param index="1">enable abort, 1 is true, anything else false.</param>
+	      <param index="2">ground bearing (deg*100).</param>
+	      <param index="3">abort bearing threshold (deg*100)</param>
+	      <param index="4">Empty</param>
+	      <param index="5">Empty</param>
+	      <param index="6">Empty</param>
+	      <param index="7">Empty</param>
+	    </entry>
 	  </enum>
 
 	  <!-- fenced mode enums -->

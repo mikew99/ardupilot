@@ -30,7 +30,9 @@ static void navigate()
 
     // nav_bearing will includes xtrac correction
     // ------------------------------------------
-    nav_bearing_cd = target_bearing_cd;
+    if (hold_course == -1) { // if not on landing flare or taking off
+        nav_bearing_cd = target_bearing_cd;
+    }
 
     // check if we have missed the WP
     loiter_delta = (target_bearing_cd - old_target_bearing_cd)/100;
